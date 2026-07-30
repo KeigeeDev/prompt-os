@@ -1,0 +1,132 @@
+// PromptOS — Prisma schema (foundation artifact)
+// Status: Draft — do not run migrations until architecture approval + Milestone 0
+// Engine: SQLite | IDs: ULID (application-generated)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/// Polymorphic AI knowledge asset (prompt, agent, workflow, …)
+model Asset {
+  id                  String    @id
+  type                String // AssetType discriminator
+  title               String
+  description         String    @default("")
+  body                String    @default("")
+  category            String?
+  status              String    @default("draft") // draft | active | archived | deprecated
+  version             String    @default("1.0.0")
+  isFavorite          Boolean   @default(false) @map("is_favorite")
+  isPinned            Boolean   @default(false) @map("is_pinned")
+  isArchived          Boolean   @default(false) @map("is_archived")
+  notes               String    @default("")
+  /// JSON string array of model identifiers
+  modelCompatibility  String    @default("[]") @map("model_compatibility")
+  /// JSON object validated by Zod per Asset.type
+  extension           String    @default("{}")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+  deletedAt           DateTime? @map("deleted_at")
+
+  tags          AssetTag[]
+  variables     Variable[]
+  revisions     Revision[]
+  relationsFrom Relationship[] @relation("RelationSource")
+  relationsTo   Relationship[] @relation("RelationTarget")
+
+  @@index([type])
+  @@index([updatedAt])
+  @@index([isFavorite])
+  @@index([isPinned])
+  @@index([isArchived])
+  @@index([category])
+  @@index([deletedAt])
+  @@index([title])
+  @@map("assets")
+}
+
+model Tag {
+  id        String   @id
+  name      String   @unique
+  color     String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  assets AssetTag[]
+
+  @@map("tags")
+}
+
+model AssetTag {
+  assetId String @map("asset_id")
+  tagId   String @map("tag_id")
+
+  asset Asset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  tag   Tag   @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([assetId, tagId])
+  @@map("asset_tags")
+}
+
+model Variable {
+  id           String  @id
+  assetId      String  @map("asset_id")
+  key          String
+  label        String  @default("")
+  description  String  @default("")
+  defaultValue String  @default("") @map("default_value")
+  required     Boolean @default(false)
+  sortOrder    Int     @default(0) @map("sort_order")
+
+  asset Asset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+  @@unique([assetId, key])
+  @@index([assetId])
+  @@map("variables")
+}
+
+model Revision {
+  id             String   @id
+  assetId        String   @map("asset_id")
+  revisionNumber Int      @map("revision_number")
+  /// Full JSON snapshot for restore/compare
+  snapshot       String
+  changeSummary  String?  @map("change_summary")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  asset Asset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+  @@unique([assetId, revisionNumber])
+  @@index([assetId, createdAt])
+  @@map("revisions")
+}
+
+model Relationship {
+  id        String   @id
+  sourceId  String   @map("source_id")
+  targetId  String   @map("target_id")
+  /// references | depends_on | parent_of | related | contains | uses
+  kind      String
+  label     String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  source Asset @relation("RelationSource", fields: [sourceId], references: [id], onDelete: Cascade)
+  target Asset @relation("RelationTarget", fields: [targetId], references: [id], onDelete: Cascade)
+
+  @@unique([sourceId, targetId, kind])
+  @@index([sourceId])
+  @@index([targetId])
+  @@map("relationships")
+}
+
+model Setting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("settings")
+}
