@@ -40,3 +40,5 @@ out/
 # Misc
 .turbo/
 *.tsbuildinfo
+src-tauri/target/
+

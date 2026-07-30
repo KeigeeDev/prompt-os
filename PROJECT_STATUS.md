@@ -2,11 +2,11 @@
 
 | Field | Value |
 |-------|-------|
-| Phase | **0 — Foundation / Architecture** |
-| Branch | `cursor/project-foundation-docs-43c7` |
-| App code | Not started (by design) |
-| Clarifying questions | ✅ **Decided** (2026-07-30) |
-| Blocking | Milestone 0 architecture sign-off |
+| Phase | **1 — Project scaffold** (in progress) |
+| Branch | `cursor/milestone-1-scaffold-43c7` |
+| Milestone 0 | ✅ Signed off |
+| Milestone 1 | 🚧 Scaffolding |
+| Clarifying questions | ✅ Decided |
 
 ## Locked decisions (summary)
 
@@ -20,5 +20,4 @@
 
 ## Next action
 
-1. Confirm Milestone 0 architecture sign-off
-2. Begin [Milestone 1 — Project scaffold](./docs/development/mvp-milestones.md)
+Complete Milestone 1 exit criteria, then begin [Milestone 2 — Asset library & CRUD](./docs/development/mvp-milestones.md).

@@ -12,12 +12,12 @@
 ### Done when
 
 - [x] Clarifying questions answered ([clarifying-questions.md](../product/clarifying-questions.md))
-- [ ] PRD reviewed
-- [ ] System architecture reviewed (including Tauri + Prisma / Node LTS approach)
-- [ ] Design system light-first / Graphite Ink accepted
-- [ ] Green light to scaffold code
+- [x] PRD reviewed
+- [x] System architecture reviewed (including Tauri + Prisma / Node LTS approach)
+- [x] Design system light-first / Graphite Ink accepted
+- [x] Green light to scaffold code (**signed off**)
 
-**No application feature code before this gate.**
+**Application feature code begins at Milestone 1.**
 
 ---
 
@@ -38,9 +38,12 @@
 
 ### Exit criteria
 
-- `pnpm dev` / `pnpm tauri dev` runs on Windows
-- CI workflow passes lint + typecheck + tests
-- Empty AppShell visible (light theme)
+- [x] `pnpm dev` runs (Vite UI)
+- [x] `pnpm tauri:dev` configured for Windows (`src-tauri`)
+- [x] CI workflow: lint, typecheck, test, build
+- [x] Empty AppShell visible (light theme)
+- [x] Prisma initial migration + `DataClient` port (memory in renderer; Prisma in Node)
+
 ---
 
 ## Milestone 2 — Asset library & CRUD

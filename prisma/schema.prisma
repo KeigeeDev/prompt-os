@@ -1,6 +1,5 @@
-// PromptOS — Prisma schema (foundation artifact)
-// Status: Draft — clarifying questions decided; migrate at Milestone 1
-// Engine: SQLite | IDs: ULID (application-generated)
+// PromptOS — Prisma schema
+// Milestone 1 scaffold | SQLite | ULID ids (application-generated)
 // Decisions: soft delete only · nested categories · nested prompt packs · Windows MVP
 
 generator client {

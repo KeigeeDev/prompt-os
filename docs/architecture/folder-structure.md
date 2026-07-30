@@ -1,7 +1,7 @@
 # PromptOS — Folder Structure
 
-**Version:** 0.1.0  
-**Status:** Draft — target structure (not yet scaffolded in code)
+**Version:** 0.1.1  
+**Status:** Scaffolded in Milestone 1 — follow this layout for new files
 
 This document defines the **canonical repository layout**. New files should follow it. Implementation scaffolding begins only after architecture approval.
 
@@ -24,7 +24,7 @@ This document defines the **canonical repository layout**. New files should foll
 ```text
 prompt-os/
 ├── README.md
-├── LICENSE                          # TBD after clarifying questions
+├── LICENSE                          # MIT
 ├── package.json
 ├── pnpm-lock.yaml
 ├── tsconfig.json

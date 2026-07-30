@@ -1,0 +1,11 @@
+{
+  "git": {
+    "schemas": {
+      "Cargo.toml": "toml",
+      "tauri.conf.json": "json"
+    }
+  },
+  "files.watcherExclude": {
+    "**/target/**": true
+  }
+}
