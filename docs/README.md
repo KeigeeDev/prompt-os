@@ -19,6 +19,7 @@ This folder is part of the repository’s single source of truth.
 | # | Deliverable | Location |
 |---|-------------|----------|
 | 1 | Product Requirements Document | [product/PRD.md](./product/PRD.md) |
+| — | Clarifying Questions (**decided**) | [product/clarifying-questions.md](./product/clarifying-questions.md) |
 | 2 | High-Level System Architecture | [architecture/system-architecture.md](./architecture/system-architecture.md) |
 | 3 | Folder Structure | [architecture/folder-structure.md](./architecture/folder-structure.md) |
 | 4 | Database Schema | [database/schema.md](./database/schema.md) |
@@ -40,7 +41,8 @@ This folder is part of the repository’s single source of truth.
 
 ## Approval gate
 
-**Do not implement application features until Milestone 0 is approved** (PRD + architecture + critical clarifying questions).
+Clarifying questions are **decided**.  
+**Do not implement application features until Milestone 0 architecture sign-off.**
 
 After approval, proceed strictly by [MVP Milestones](./development/mvp-milestones.md).
 
