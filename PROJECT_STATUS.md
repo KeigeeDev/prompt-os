@@ -2,22 +2,21 @@
 
 | Field | Value |
 |-------|-------|
-| Phase | **1 — Project scaffold** (in progress) |
+| Phase | **1 — Project scaffold** ✅ |
 | Branch | `cursor/milestone-1-scaffold-43c7` |
 | Milestone 0 | ✅ Signed off |
-| Milestone 1 | 🚧 Scaffolding |
+| Milestone 1 | ✅ Complete (web scaffold + Tauri Windows project) |
 | Clarifying questions | ✅ Decided |
 
-## Locked decisions (summary)
+## Milestone 1 delivered
 
-- **Windows only** · **Light-first** · Soft delete only · `{{snake_case}}`
-- Workflow builder + viz only · Single window · Demo sample library · English only
-- No telemetry · OS disk encryption · Manual backup (auto optional later)
-- Notes ≠ Snippets · Nested prompt packs · Nested categories
-- Status: `draft \| active \| archived \| deprecated` · Free model tags
-- Palette: navigate/create/search · Ego-graph · Tabbed preview
-- **pnpm** · **Node LTS** · Single package · **MIT**
+- Vite + React + TypeScript + Tailwind + shadcn button baseline
+- AppShell (sidebar, top bar), dashboard, settings (theme)
+- Prisma schema + initial migration (nested categories)
+- `DataClient` port: memory adapter in renderer, Prisma adapter in Node
+- Vitest + ESLint + Prettier + GitHub Actions CI
+- Tauri 2 Windows targets (NSIS/MSI) under `src-tauri/`
 
 ## Next action
 
-Complete Milestone 1 exit criteria, then begin [Milestone 2 — Asset library & CRUD](./docs/development/mvp-milestones.md).
+Begin [Milestone 2 — Asset library & CRUD](./docs/development/mvp-milestones.md).

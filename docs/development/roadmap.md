@@ -8,9 +8,9 @@
 ## Phased overview
 
 ```text
-Phase 0  Foundation & architecture (clarifying Qs decided)  ← YOU ARE HERE
-Phase 1  App shell + persistence skeleton (Windows, pnpm, Node LTS)
-Phase 2  Asset CRUD + library + editor
+Phase 0  Foundation & architecture (signed off)
+Phase 1  App shell + persistence skeleton          ← COMPLETE
+Phase 2  Asset CRUD + library + editor metadata    ← NEXT
 Phase 3  Search + command palette + dashboard
 Phase 4  Versions + relationships + graph
 Phase 5  Workflows + agents specialization
