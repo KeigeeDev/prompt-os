@@ -1,7 +1,7 @@
 # PromptOS — Product Requirements Document (PRD)
 
-**Version:** 0.1.0  
-**Status:** Draft — pending architectural approval  
+**Version:** 0.1.1  
+**Status:** Draft — clarifying questions decided; pending final Milestone 0 approval  
 **Last updated:** 2026-07-30  
 **Owner:** Product / Architecture
 
@@ -44,21 +44,26 @@ AI practitioners accumulate prompts, agent definitions, workflows, and related a
 
 - Store, edit, search, tag, favorite, archive, and version all supported asset types locally
 - Provide a fast dashboard (recent, favorites, pinned, stats)
-- Offer a TipTap-based markdown editor with live preview and variable placeholders
+- Offer a TipTap-based markdown editor with **tabbed** preview and `{{snake_case}}` variable placeholders
 - Support import/export (Markdown, JSON, YAML, ZIP)
-- Model relationships between assets and visualize them as a graph
-- Ship as a Tauri desktop app with React + TypeScript UI
+- Model relationships between assets and visualize them as an **ego-graph**
+- Ship as a **Windows-only** Tauri desktop app with React + TypeScript UI
+- Seed a **first-run sample library** (demo assets) for onboarding
 - Establish clean architecture so future AI provider integrations and plugins do not require major refactoring
 
 ### 3.2 Non-Goals (MVP)
 
+- macOS / Linux packaging (Windows-only for MVP)
 - Multi-user collaboration or shared workspaces
 - Real-time cloud sync
 - Executing prompts against live LLM APIs (ChatGPT, Claude, etc.)
+- Workflow *execution* (builder + visualization only)
+- Hard delete / empty trash (soft delete only)
+- Telemetry
 - Plugin marketplace
 - Mobile clients
 - Team / org admin features
-- Full visual workflow *runtime* (MVP may include a simplified builder; execution is future)
+- Non-English localization
 
 ### 3.3 Success Metrics (qualitative for v1)
 
@@ -98,9 +103,9 @@ All assets share a **common core schema** (title, description, body, metadata, v
 | `design_brief` | Design goals, constraints, references |
 | `research_framework` | Structured research method / question set |
 | `automation_recipe` | Stepwise automation instructions |
-| `prompt_pack` | Bundle/collection of related assets |
-| `note` | Freeform markdown note |
-| `snippet` | Short reusable text fragment |
+| `prompt_pack` | Bundle/collection of related assets (**nested packs** allowed) |
+| `note` | Freeform markdown note (**distinct** from snippet) |
+| `snippet` | Short reusable text fragment (**distinct** from note) |
 
 ---
 
@@ -116,18 +121,18 @@ All assets share a **common core schema** (title, description, body, metadata, v
 
 ### 6.2 Asset Library
 
-- Filter by type, category, tags, status, favorite, archived
+- Filter by type, **nested category**, tags, status, favorite, archived
 - Sort by title, updated, created, type
 - List and grid views
-- Bulk actions: tag, archive, favorite, export, delete (soft-delete preferred)
+- Bulk actions: tag, archive, favorite, export, delete (**soft-delete only** in MVP)
 
 ### 6.3 Prompt Editor
 
-- TipTap markdown editor + live preview
-- Variable placeholders (e.g. `{{variable_name}}`) with validation
+- TipTap markdown editor + **tabbed** preview (Editor | Preview)
+- Variable placeholders: **`{{snake_case}}`** with validation
 - Actions: copy body, duplicate, fork, export
 - Automatic version history on meaningful saves
-- Model compatibility metadata
+- Model compatibility as **free tags** (e.g. `gpt-4o`, `claude-4`)
 
 ### 6.4 Agent Library
 
@@ -157,7 +162,7 @@ Primary engine for MVP: **Fuse.js** over an indexed in-memory projection refresh
 ### 6.7 Relationships
 
 - Explicit asset-to-asset links (typed: `references`, `depends_on`, `parent_of`, `related`, etc.)
-- Graph visualization (Obsidian-like)
+- Graph visualization as **ego-graph** (selected asset + N hops)
 - Navigate from asset detail to related assets
 
 ### 6.8 Version History
@@ -176,15 +181,17 @@ Primary engine for MVP: **Fuse.js** over an indexed in-memory projection refresh
 
 ### 6.10 Settings
 
-- Themes (light / dark / system — exact tokens in Design System)
-- Keyboard shortcuts customization (MVP: view defaults; edit may be post-MVP)
-- Database backup / restore
+- Themes: **light-first** default; dark and system also available (Design System tokens)
+- Single primary window; optional preference panes (no multi-window shell)
+- Keyboard shortcuts: view defaults in MVP
+- Database **manual** backup / restore (scheduled auto-backup is post-MVP)
+- Encryption at rest: rely on **OS disk encryption**
 - Placeholders for: Git Sync, AI Provider settings
 
 ### 6.11 Command Palette
 
-- Global `⌘K` / `Ctrl+K`
-- Navigate, create, search, run common actions
+- Global `Ctrl+K` (Windows)
+- **Navigation + create + search only** (settings actions deferred)
 
 ---
 
@@ -207,7 +214,7 @@ Primary engine for MVP: **Fuse.js** over an indexed in-memory projection refresh
 
 | Layer | Choice | Rationale |
 |-------|--------|-----------|
-| Desktop shell | **Tauri** | Smaller binary, Rust security model, lower memory vs Electron |
+| Desktop shell | **Tauri** (Windows MVP) | Smaller binary, Rust security model, lower memory vs Electron |
 | UI | React + Vite + TypeScript | Fast DX, ecosystem fit |
 | Styling | Tailwind + shadcn/ui | Consistent primitives, accessible components |
 | Routing | React Router | Standard SPA routing |
@@ -216,10 +223,14 @@ Primary engine for MVP: **Fuse.js** over an indexed in-memory projection refresh
 | Validation | Zod | Runtime + type inference |
 | Search | Fuse.js | Fast client fuzzy search for MVP scale |
 | Editor | TipTap | Extensible markdown/rich text |
+| Package manager | **pnpm** | Fast, strict |
+| Sidecar runtime | **Node LTS** | Prisma stability |
+| Repo layout | **Single package** | Avoid monorepo until needed |
+| License | **MIT** | Open source |
 | Test | Vitest + RTL | Aligned with Vite |
 | Lint/format | ESLint + Prettier | Standard |
 
-**Trade-off — Tauri vs Electron:** Prefer Tauri. Fall back to Electron only if a hard requirement (e.g. unsupported native module) cannot be met. Prisma + SQLite in Tauri typically runs via a local sidecar or Node/Bun backend process; see Architecture doc for the chosen IPC boundary.
+**Trade-off — Tauri vs Electron:** Prefer Tauri. Fall back to Electron only if a hard requirement (e.g. unsupported native module) cannot be met. Prisma + SQLite in Tauri runs via a local **Node LTS** data client / sidecar; see Architecture doc.
 
 **Trade-off — Fuse.js vs FTS5:** Fuse.js is simpler for MVP and keeps search in the app layer. FTS5 is better for very large corpora; repository interface abstracts search so we can migrate later.
 
@@ -248,12 +259,21 @@ Primary engine for MVP: **Fuse.js** over an indexed in-memory projection refresh
 
 ---
 
-## 11. Open Product Questions
+## 11. Decided Product Questions
 
-See [Clarifying Questions](./clarifying-questions.md). Architecture and MVP scope should not silently assume answers to those items.
+All clarifying questions are **answered** — see [Clarifying Questions](./clarifying-questions.md).
+
+### Status enum (confirmed)
+
+`draft` | `active` | `archived` | `deprecated`
+
+### Categories (confirmed)
+
+Nested taxonomy (parent/child categories), not free-text-only.
 
 ---
 
 ## 12. Approval Gate
 
-**No application feature implementation begins until this PRD and the companion architecture documents are explicitly approved.** After approval, delivery proceeds milestone-by-milestone per [MVP Milestones](../development/mvp-milestones.md).
+**Clarifying questions: decided.**  
+**No application feature implementation begins until Milestone 0 is explicitly approved** (architecture sign-off). After approval, delivery proceeds milestone-by-milestone per [MVP Milestones](../development/mvp-milestones.md).

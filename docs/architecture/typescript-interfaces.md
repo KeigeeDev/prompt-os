@@ -1,7 +1,7 @@
 # PromptOS — TypeScript Interfaces & Domain Types
 
-**Version:** 0.1.0  
-**Status:** Draft — reference for implementation  
+**Version:** 0.1.1  
+**Status:** Aligns with decided clarifying questions  
 **Location when coded:** `src/domain/**` and `src/application/ports/**`
 
 These types are the **language of the domain**. Zod schemas should infer or mirror them at runtime boundaries.
@@ -63,19 +63,30 @@ export interface Tag {
   createdAt: Date;
 }
 
+/** Nested category taxonomy node */
+export interface Category {
+  id: string;
+  name: string;
+  parentId?: string | null;
+  sortOrder: number;
+  createdAt: Date;
+}
+
 export interface AssetBase {
   id: string;
   type: AssetType;
   title: string;
   description: string;
   body: string;
-  category?: string | null;
+  categoryId?: string | null;
+  category?: Category | null;
   status: AssetStatus;
   version: string;
   isFavorite: boolean;
   isPinned: boolean;
   isArchived: boolean;
   notes: string;
+  /** Free-form model tags, e.g. gpt-4o, claude-4 */
   modelCompatibility: string[];
   tags: Tag[];
   variables: Variable[];
@@ -159,6 +170,8 @@ export interface McpServerExtension {
 
 export interface PromptPackExtension {
   memberAssetIds: string[];
+  /** Nested child prompt_pack asset IDs; cycles forbidden */
+  childPackIds: string[];
   versionLabel?: string;
 }
 ```
@@ -205,13 +218,14 @@ export interface CreateAssetInput {
   title: string;
   description?: string;
   body?: string;
-  category?: string;
+  categoryId?: string | null;
   status?: AssetStatus;
   version?: string;
   notes?: string;
   modelCompatibility?: string[];
   extension?: Record<string, unknown>;
   tagNames?: string[];
+  /** Variable keys must be snake_case; body uses {{key}} */
   variables?: Omit<Variable, 'id' | 'assetId'>[];
 }
 
@@ -219,7 +233,7 @@ export interface UpdateAssetInput {
   title?: string;
   description?: string;
   body?: string;
-  category?: string | null;
+  categoryId?: string | null;
   status?: AssetStatus;
   version?: string;
   isFavorite?: boolean;
@@ -234,7 +248,9 @@ export interface UpdateAssetInput {
 
 export interface AssetFilter {
   types?: AssetType[];
-  category?: string;
+  categoryId?: string;
+  /** Include descendants of categoryId when true */
+  includeCategoryDescendants?: boolean;
   tags?: string[];
   status?: AssetStatus[];
   isFavorite?: boolean;
@@ -323,6 +339,22 @@ export interface SettingsRepository {
   set(key: string, value: unknown): Promise<void>;
   getAll(): Promise<Record<string, unknown>>;
 }
+
+export interface CategoryRepository {
+  findById(id: string): Promise<Category | null>;
+  listRoots(): Promise<Category[]>;
+  listChildren(parentId: string): Promise<Category[]>;
+  create(input: {
+    name: string;
+    parentId?: string | null;
+    sortOrder?: number;
+  }): Promise<Category>;
+  update(
+    id: string,
+    input: { name?: string; parentId?: string | null; sortOrder?: number },
+  ): Promise<Category>;
+  softOrRestrictDelete(id: string): Promise<void>;
+}
 ```
 
 ---
@@ -331,10 +363,13 @@ export interface SettingsRepository {
 
 ```ts
 export interface AppSettings {
+  /** Default: light (light-first product decision) */
   theme: 'light' | 'dark' | 'system';
   sidebarCollapsed: boolean;
   recentLimit: number;
   keyboardShortcuts: Record<string, string>;
+  /** First-run demo library seeded; user may dismiss */
+  hasCompletedOnboarding: boolean;
 }
 ```
 

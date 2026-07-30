@@ -1,8 +1,9 @@
 # PromptOS — Database Schema
 
-**Version:** 0.1.0  
+**Version:** 0.1.1  
 **Engine:** SQLite  
 **ORM:** Prisma  
+**Decisions:** Soft delete only · Nested category taxonomy · Nested prompt packs · Free model tags
 
 ---
 
@@ -18,12 +19,12 @@
 ## 2. ER Overview
 
 ```text
-┌──────────────┐       ┌─────────────────┐
-│   settings   │       │     assets      │◄────┐
-└──────────────┘       │  (core entity)  │     │
-                       └────────┬────────┘     │
-                                │              │
-              ┌─────────────────┼──────────────┼────────────┐
+┌──────────────┐       ┌─────────────────┐       ┌────────────┐
+│   settings   │       │     assets      │◄──────┤ categories │ (nested)
+└──────────────┘       │  (core entity)  │       └─────▲──────┘
+                       └────────┬────────┘             │ parent_id
+                                │
+              ┌─────────────────┼──────────────┬────────────┐
               ▼                 ▼              ▼            ▼
       ┌──────────────┐  ┌─────────────┐ ┌────────────┐ ┌────────────┐
       │ asset_tags   │  │  revisions  │ │relationships│ │  variables │
@@ -49,7 +50,7 @@ Core polymorphic entity.
 | `title` | TEXT NOT NULL | |
 | `description` | TEXT | |
 | `body` | TEXT | Markdown |
-| `category` | TEXT | Nullable; indexed |
+| `category_id` | TEXT FK → categories | Nullable; nested taxonomy |
 | `status` | TEXT | `draft` \| `active` \| `archived` \| `deprecated` |
 | `version` | TEXT | Semver-like display version, e.g. `1.2.0` |
 | `is_favorite` | INTEGER | 0/1 |
@@ -62,9 +63,25 @@ Core polymorphic entity.
 | `updated_at` | DATETIME | |
 | `deleted_at` | DATETIME | Soft delete |
 
-**Indexes:** `(type)`, `(updated_at)`, `(is_favorite)`, `(is_pinned)`, `(is_archived)`, `(category)`, `(deleted_at)`, `(title)`
+**Indexes:** `(type)`, `(updated_at)`, `(is_favorite)`, `(is_pinned)`, `(is_archived)`, `(category_id)`, `(deleted_at)`, `(title)`
 
-### 3.2 `tags`
+**Delete policy:** Soft delete only (`deleted_at`). No hard-delete / empty-trash in MVP.
+
+### 3.2 `categories` (nested taxonomy)
+
+| Column | Type | Notes |
+|--------|------|-------|
+| `id` | TEXT PK | ULID |
+| `name` | TEXT NOT NULL | Unique within parent |
+| `parent_id` | TEXT FK → categories | Null = root |
+| `sort_order` | INTEGER | |
+| `created_at` | DATETIME | |
+
+**Unique:** `(parent_id, name)`  
+**Index:** `(parent_id)`  
+Prevent cycles at the service layer.
+
+### 3.3 `tags`
 
 | Column | Type |
 |--------|------|
@@ -73,7 +90,7 @@ Core polymorphic entity.
 | `color` | TEXT NULL |
 | `created_at` | DATETIME |
 
-### 3.3 `asset_tags`
+### 3.4 `asset_tags`
 
 | Column | Type |
 |--------|------|
@@ -81,7 +98,7 @@ Core polymorphic entity.
 | `tag_id` | TEXT FK → tags |
 | PK | `(asset_id, tag_id)` |
 
-### 3.4 `variables`
+### 3.5 `variables`
 
 Prompt/asset template variables.
 
@@ -89,7 +106,7 @@ Prompt/asset template variables.
 |--------|------|
 | `id` | TEXT PK |
 | `asset_id` | TEXT FK |
-| `key` | TEXT | e.g. `audience` |
+| `key` | TEXT | `snake_case` only, e.g. `audience` — rendered as `{{audience}}` |
 | `label` | TEXT |
 | `description` | TEXT |
 | `default_value` | TEXT |
@@ -98,7 +115,7 @@ Prompt/asset template variables.
 
 **Unique:** `(asset_id, key)`
 
-### 3.5 `revisions`
+### 3.6 `revisions`
 
 | Column | Type |
 |--------|------|
@@ -112,7 +129,7 @@ Prompt/asset template variables.
 **Unique:** `(asset_id, revision_number)`  
 **Index:** `(asset_id, created_at)`
 
-### 3.6 `relationships`
+### 3.7 `relationships`
 
 | Column | Type |
 |--------|------|
@@ -126,7 +143,7 @@ Prompt/asset template variables.
 **Unique:** `(source_id, target_id, kind)`  
 Prevent self-loops at service layer.
 
-### 3.7 `settings`
+### 3.8 `settings`
 
 Key-value preferences (theme, shortcuts JSON, etc.).
 
@@ -184,12 +201,18 @@ Validated in application layer with Zod (not DB constraints).
 
 ### `prompt_pack`
 ```json
-{ "memberAssetIds": ["string"], "versionLabel": "string?" }
+{
+  "memberAssetIds": ["string"],
+  "childPackIds": ["string"],
+  "versionLabel": "string?"
+}
 ```
+
+Nested packs: `childPackIds` reference other `prompt_pack` assets. Prevent cycles in `PromptPackService`.
 
 ### Others (`template`, `coding_rule`, `design_brief`, `research_framework`, `automation_recipe`, `note`, `snippet`)
 
-Minimal or empty extension; body/markdown carries content. Extend as product needs clarify.
+Minimal or empty extension; body/markdown carries content. **Notes and snippets remain distinct types.**
 
 ---
 
@@ -203,8 +226,10 @@ Minimal or empty extension; body/markdown carries content. Extend as product nee
 
 ## 6. Backup / Restore
 
-Backup = consistent copy of SQLite file (checkpoint WAL first).  
-Restore = replace DB file while app is closed/unlocked, then rebuild search index.
+Backup = **manual** consistent copy of SQLite file (checkpoint WAL first).  
+Scheduled/auto backup is **optional post-MVP**.  
+Restore = replace DB file while app is closed/unlocked, then rebuild search index.  
+Encryption at rest: **OS disk encryption** only (no app passphrase in MVP).
 
 Schema version tracked by Prisma migrations table `_prisma_migrations`.
 

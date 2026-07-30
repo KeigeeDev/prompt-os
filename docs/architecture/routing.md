@@ -12,7 +12,7 @@
 - Asset detail always `/assets/:id` (type from data, not URL) — avoids broken links when types are wrong
 - Type-filtered library via query or path segment
 - Settings as nested routes
-- Command palette is an overlay, not a route
+- Command palette is an overlay, not a route (`Ctrl+K` on Windows)
 
 **Trade-off — `/assets/:id` vs `/prompts/:id`:**  
 Type-specific URLs are prettier but complicate redirects and shared editor shells. Shared path + type badge is simpler and more extensible.

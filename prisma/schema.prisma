@@ -1,6 +1,7 @@
 // PromptOS — Prisma schema (foundation artifact)
-// Status: Draft — do not run migrations until architecture approval + Milestone 0
+// Status: Draft — clarifying questions decided; migrate at Milestone 1
 // Engine: SQLite | IDs: ULID (application-generated)
+// Decisions: soft delete only · nested categories · nested prompt packs · Windows MVP
 
 generator client {
   provider = "prisma-client-js"
@@ -11,28 +12,46 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/// Nested category taxonomy (parent/child)
+model Category {
+  id        String   @id
+  name      String
+  parentId  String?  @map("parent_id")
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: Restrict)
+  children Category[] @relation("CategoryTree")
+  assets   Asset[]
+
+  @@unique([parentId, name])
+  @@index([parentId])
+  @@map("categories")
+}
+
 /// Polymorphic AI knowledge asset (prompt, agent, workflow, …)
 model Asset {
-  id                  String    @id
-  type                String // AssetType discriminator
-  title               String
-  description         String    @default("")
-  body                String    @default("")
-  category            String?
-  status              String    @default("draft") // draft | active | archived | deprecated
-  version             String    @default("1.0.0")
-  isFavorite          Boolean   @default(false) @map("is_favorite")
-  isPinned            Boolean   @default(false) @map("is_pinned")
-  isArchived          Boolean   @default(false) @map("is_archived")
-  notes               String    @default("")
-  /// JSON string array of model identifiers
-  modelCompatibility  String    @default("[]") @map("model_compatibility")
+  id                 String    @id
+  type               String // AssetType discriminator
+  title              String
+  description        String    @default("")
+  body               String    @default("")
+  categoryId         String?   @map("category_id")
+  status             String    @default("draft") // draft | active | archived | deprecated
+  version            String    @default("1.0.0")
+  isFavorite         Boolean   @default(false) @map("is_favorite")
+  isPinned           Boolean   @default(false) @map("is_pinned")
+  isArchived         Boolean   @default(false) @map("is_archived")
+  notes              String    @default("")
+  /// JSON string array of free-form model tags
+  modelCompatibility String    @default("[]") @map("model_compatibility")
   /// JSON object validated by Zod per Asset.type
-  extension           String    @default("{}")
-  createdAt           DateTime  @default(now()) @map("created_at")
-  updatedAt           DateTime  @updatedAt @map("updated_at")
-  deletedAt           DateTime? @map("deleted_at")
+  extension          String    @default("{}")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+  deletedAt          DateTime? @map("deleted_at") // soft delete only in MVP
 
+  category      Category?      @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   tags          AssetTag[]
   variables     Variable[]
   revisions     Revision[]
@@ -44,7 +63,7 @@ model Asset {
   @@index([isFavorite])
   @@index([isPinned])
   @@index([isArchived])
-  @@index([category])
+  @@index([categoryId])
   @@index([deletedAt])
   @@index([title])
   @@map("assets")
@@ -75,6 +94,7 @@ model AssetTag {
 model Variable {
   id           String  @id
   assetId      String  @map("asset_id")
+  /// snake_case key; rendered as {{key}}
   key          String
   label        String  @default("")
   description  String  @default("")

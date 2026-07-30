@@ -5,11 +5,20 @@
 | Phase | **0 — Foundation / Architecture** |
 | Branch | `cursor/project-foundation-docs-43c7` |
 | App code | Not started (by design) |
-| Blocking | Milestone 0 approval + clarifying questions |
+| Clarifying questions | ✅ **Decided** (2026-07-30) |
+| Blocking | Milestone 0 architecture sign-off |
+
+## Locked decisions (summary)
+
+- **Windows only** · **Light-first** · Soft delete only · `{{snake_case}}`
+- Workflow builder + viz only · Single window · Demo sample library · English only
+- No telemetry · OS disk encryption · Manual backup (auto optional later)
+- Notes ≠ Snippets · Nested prompt packs · Nested categories
+- Status: `draft \| active \| archived \| deprecated` · Free model tags
+- Palette: navigate/create/search · Ego-graph · Tabbed preview
+- **pnpm** · **Node LTS** · Single package · **MIT**
 
 ## Next action
 
-1. Review docs under `/docs`
-2. Answer [clarifying-questions.md](./docs/product/clarifying-questions.md)
-3. Approve architecture
-4. Begin [Milestone 1 — Project scaffold](./docs/development/mvp-milestones.md)
+1. Confirm Milestone 0 architecture sign-off
+2. Begin [Milestone 1 — Project scaffold](./docs/development/mvp-milestones.md)

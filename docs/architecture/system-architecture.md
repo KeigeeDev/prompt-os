@@ -1,8 +1,8 @@
 # PromptOS — High-Level System Architecture
 
-**Version:** 0.1.0  
-**Status:** Draft — pending approval  
-**Companion docs:** [PRD](../product/PRD.md) · [Folder Structure](./folder-structure.md) · [Database Schema](../database/schema.md)
+**Version:** 0.1.1  
+**Status:** Clarifying questions decided — pending Milestone 0 sign-off  
+**Companion docs:** [PRD](../product/PRD.md) · [Folder Structure](./folder-structure.md) · [Database Schema](../database/schema.md) · [Decisions](../product/clarifying-questions.md)
 
 ---
 
@@ -56,13 +56,13 @@ PromptOS is a **local-first desktop client** with three logical layers:
 
 1. **Tauri (Rust)** — shell, native dialogs, secure app data directory, backup file copy.
 2. **Frontend (React)** — all UX.
-3. **Data access** — Prisma against SQLite in a **Node/Bun sidecar** *or* Prisma invoked from a thin local RPC layer started by Tauri.
+3. **Data access** — Prisma against SQLite in a **Node LTS sidecar** (or thin local RPC started by Tauri).
 
 ### Trade-off analysis
 
 | Option | Pros | Cons | Verdict |
 |--------|------|------|---------|
-| **A. Prisma in Node sidecar** | Full Prisma DX, migrations, familiar TS | Extra process to manage | **Recommended for MVP** |
+| **A. Prisma in Node LTS sidecar** | Full Prisma DX, migrations, familiar TS | Extra process to manage | **Accepted for MVP** |
 | **B. Prisma in renderer via Node polyfills** | Single process illusion | Fragile in Tauri WebView; not production-safe | Reject |
 | **C. Pure Rust SQLite (sqlx) + no Prisma** | Native, fast | Lose Prisma migrations/DX; rewrite TS domain mapping | Future optimization |
 | **D. Electron + Prisma in main** | Simpler Node integration | Heavier app; contradicts Tauri preference | Fallback only |
@@ -187,7 +187,7 @@ Use **ULID** (sortable, unique) for assets and revisions. Avoid autoincrement fo
 
 ### 7.2 Soft delete
 
-`deletedAt` on assets. Hard delete only via settings “Empty trash” (post-MVP acceptable).
+`deletedAt` on assets. **Soft delete only in MVP** — no hard-delete / empty-trash UI yet.
 
 ### 7.3 Transactions
 
@@ -253,7 +253,7 @@ Visualization: React Flow (recommended) or custom SVG. **Not installed until Wor
 
 ## 10. Relationship Graph
 
-Global knowledge graph = all `relationships` edges + assets as nodes. Projection service builds a view model for the graph page (filter by type/depth).
+Global knowledge graph projection uses **ego-graph** queries (focus asset + depth N). Do not load the full library graph by default.
 
 ---
 
@@ -284,7 +284,7 @@ Keep these as empty folders or `*.port.ts` interfaces with no implementations in
 
 ## 13. Deployment / Distribution
 
-- Tauri bundler → platform installers (macOS, Windows, Linux)
+- Tauri bundler → **Windows** installer only for MVP (msi/nsis). macOS/Linux deferred.
 - CI: lint, typecheck, unit tests, build (architecture milestone sets this up)
 
 ---
@@ -303,12 +303,13 @@ Keep these as empty folders or `*.port.ts` interfaces with no implementations in
 
 | ID | Decision | Status |
 |----|----------|--------|
-| ADR-001 | Tauri over Electron | Accepted (pending approval) |
-| ADR-002 | Prisma + SQLite via sidecar/data client | Accepted (pending approval) |
-| ADR-003 | Single assets table + Zod-validated JSON extensions | Accepted (pending approval) |
-| ADR-004 | Fuse.js search behind port | Accepted (pending approval) |
-| ADR-005 | TipTap editor | Accepted (pending approval) |
-| ADR-006 | Zustand for client state | Accepted (pending approval) |
-| ADR-007 | ULID identifiers | Accepted (pending approval) |
+| ADR-001 | Tauri over Electron; Windows-only MVP | Accepted (pending Milestone 0 sign-off) |
+| ADR-002 | Prisma + SQLite via Node LTS data client / sidecar | Accepted (pending Milestone 0 sign-off) |
+| ADR-003 | Single assets table + Zod JSON extensions; nested `categories` | Accepted (pending Milestone 0 sign-off) |
+| ADR-004 | Fuse.js search behind port | Accepted (pending Milestone 0 sign-off) |
+| ADR-005 | TipTap editor with tabbed preview | Accepted (pending Milestone 0 sign-off) |
+| ADR-006 | Zustand for client state | Accepted (pending Milestone 0 sign-off) |
+| ADR-007 | ULID identifiers | Accepted (pending Milestone 0 sign-off) |
+| ADR-008 | Soft delete only; light-first; MIT; pnpm; single package | Accepted (pending Milestone 0 sign-off) |
 
 Full ADRs will live in `docs/architecture/adr/` after approval.

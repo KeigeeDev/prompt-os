@@ -4,7 +4,7 @@
 
 PromptOS is a desktop application that combines the knowledge-graph feel of Obsidian, the organizational clarity of Notion, the version mindset of GitHub, the speed of Raycast, and the power-user density of VS Code — fully offline, with optional sync planned for later.
 
-> **Status:** Foundation / architecture phase. Application code is intentionally not started until architecture approval (Milestone 0).
+> **Status:** Foundation / architecture phase. Clarifying questions are **decided**. Application code starts after Milestone 0 sign-off.
 
 ---
 
@@ -20,14 +20,15 @@ Prompts · Agents · Workflows · Templates · Personas · MCP Servers · Coding
 
 | Layer | Choice |
 |-------|--------|
-| Desktop | Tauri |
+| Desktop | Tauri (**Windows MVP**) |
 | UI | React, TypeScript, Vite, Tailwind CSS, shadcn/ui |
 | Routing / state | React Router, Zustand |
 | Database | SQLite + Prisma |
 | Validation | Zod |
 | Search | Fuse.js |
-| Editor | TipTap |
-| Testing | Vitest, React Testing Library |
+| Editor | TipTap (tabbed preview) |
+| Tooling | pnpm, Node LTS, Vitest, React Testing Library |
+| License | MIT |
 
 ---
 
@@ -66,7 +67,7 @@ Foundation documentation is complete:
 16. [MVP Milestones](./docs/development/mvp-milestones.md)
 17. [Future Roadmap](./docs/development/future-roadmap.md)
 
-Please review [Clarifying Questions](./docs/product/clarifying-questions.md) before approving Milestone 0.
+Please review decided answers in [Clarifying Questions](./docs/product/clarifying-questions.md). Remaining gate: **Milestone 0 architecture sign-off**, then Milestone 1 scaffold.
 
 ---
 
@@ -104,4 +105,4 @@ Until scaffold lands, there is nothing to run except reading the docs.
 
 ## License
 
-TBD — see clarifying questions.
+[MIT](./LICENSE)

@@ -1,7 +1,7 @@
 # PromptOS — Design System
 
-**Version:** 0.1.0  
-**Status:** Draft — provisional pending brand confirmation  
+**Version:** 0.1.1  
+**Status:** Light-first confirmed · Graphite Ink palette  
 **Stack:** Tailwind CSS + shadcn/ui + CSS variables
 
 ---
@@ -14,13 +14,15 @@ PromptOS should feel like a **calm power tool**: dense enough for professionals,
 
 ---
 
-## 2. Visual direction (provisional)
+## 2. Visual direction
+
+**Default theme: light.** Dark and system remain available in Settings.
 
 Avoid default AI-slop aesthetics: no purple-on-white gradients, no cream+terracotta editorial cliché, no broadsheet hairline newspaper look, no glow-heavy dark neon.
 
-### Provisional palette — “Graphite Ink”
+### Palette — “Graphite Ink”
 
-A cool neutral workspace with a single sharp accent (teal-ink), readable in light and dark.
+A cool neutral workspace with a single sharp accent (teal-ink), optimized for **light-first**, also readable in dark.
 
 | Token | Light | Dark | Role |
 |-------|-------|------|------|
@@ -161,8 +163,7 @@ Map tokens into Tailwind theme extension. shadcn CSS variables aligned to the sa
 
 ## 11. Open design questions
 
-Confirm with stakeholders (also listed in clarifying questions):
-
-- Keep Graphite Ink or provide a brand accent from an existing logo?
-- Light or dark as default?
 - Custom logo mark vs wordmark-only for MVP?
+- Keep Graphite Ink accent or provide a brand accent from an existing logo?
+
+**Decided:** Light-first default theme; English-only UI copy.

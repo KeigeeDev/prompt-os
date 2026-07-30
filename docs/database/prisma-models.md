@@ -20,12 +20,13 @@ This document explains the Prisma models. The `.prisma` file is the machine-read
 
 | Prisma model | Table | Role |
 |--------------|-------|------|
+| `Category` | `categories` | Nested taxonomy |
 | `Asset` | `assets` | Core polymorphic asset |
 | `Tag` | `tags` | Tag dictionary |
 | `AssetTag` | `asset_tags` | M2M |
-| `Variable` | `variables` | Template variables |
+| `Variable` | `variables` | Template variables (`{{snake_case}}`) |
 | `Revision` | `revisions` | Version snapshots |
 | `Relationship` | `relationships` | Graph edges |
 | `Setting` | `settings` | App preferences |
 
-See the Prisma schema file for field-level definitions, indexes, and relations.
+**Notes:** Soft delete via `Asset.deletedAt` only. Prompt pack nesting lives in `extension.childPackIds`.

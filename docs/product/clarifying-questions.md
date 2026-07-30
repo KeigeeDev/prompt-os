@@ -1,50 +1,58 @@
-# PromptOS — Clarifying Questions
+# PromptOS — Clarifying Questions (Decided)
 
-**Status:** Awaiting product decisions  
-**Purpose:** Resolve ambiguities before implementation begins.
-
-Architecture docs make **provisional defaults** where needed. Confirm or override these before Milestone 0 coding starts.
+**Status:** ✅ Decided — 2026-07-30  
+**Purpose:** Product decisions locked for Milestone 0 / MVP.
 
 ---
 
 ## Product scope
 
-1. **Primary platforms for MVP?** macOS only, or macOS + Windows + Linux from day one?
-2. **Default theme direction?** Light-first, dark-first, or system with a distinctive brand palette? (Design System proposes a provisional palette pending confirmation.)
-3. **Soft delete vs hard delete in MVP?** Provisional: soft delete + trash later.
-4. **Variable syntax?** Provisional: `{{snake_case}}` Mustache-style. Confirm, or prefer `${var}` / Handlebars?
-5. **Workflow execution in MVP?** Provisional: **builder + visualization only**, no run/execute.
-6. **Multi-window support?** Provisional: single primary window + optional preference panes.
-7. **Onboarding?** Empty-state tips only, or a first-run sample library (demo assets)?
-8. **Localization?** English-only for MVP?
+| # | Question | Decision |
+|---|----------|----------|
+| 1 | Primary platforms for MVP? | **Windows only** |
+| 2 | Default theme direction? | **Light-first** (dark + system still available in settings) |
+| 3 | Soft delete vs hard delete? | **Soft delete only** in MVP (no hard-delete / empty-trash yet) |
+| 4 | Variable syntax? | **`{{snake_case}}`** Mustache-style |
+| 5 | Workflow execution in MVP? | **Builder + visualization only** (no run/execute) |
+| 6 | Multi-window support? | **Single primary window** + optional preference panes |
+| 7 | Onboarding? | **First-run sample library** (demo assets) |
+| 8 | Localization? | **English only** |
 
 ## Data & privacy
 
-9. **Telemetry?** Provisional: **none** in MVP.
-10. **Encryption at rest?** Provisional: rely on OS disk encryption; optional DB passphrase is future.
-11. **Auto-backup schedule?** Provisional: manual backup in MVP; optional daily copy post-MVP.
+| # | Question | Decision |
+|---|----------|----------|
+| 9 | Telemetry? | **None** in MVP |
+| 10 | Encryption at rest? | **Rely on OS disk encryption**; no app-level DB passphrase in MVP |
+| 11 | Auto-backup schedule? | **Manual backup in MVP**; optional scheduled backup is post-MVP |
 
 ## Asset model
 
-12. **Are Notes and Snippets distinct enough**, or should Snippet be a Note subtype?
-13. **Prompt Packs:** ordered membership only, or nested packs?
-14. **Categories:** free text, flat controlled vocabulary, or nested taxonomy?
-15. **Status values?** Provisional: `draft | active | archived | deprecated`.
-16. **Model compatibility:** free tags (e.g. `gpt-4o`, `claude-4`) or curated enum list?
+| # | Question | Decision |
+|---|----------|----------|
+| 12 | Notes vs Snippets? | **Distinct** asset types |
+| 13 | Prompt Packs? | **Nested packs** supported |
+| 14 | Categories? | **Nested taxonomy** |
+| 15 | Status values? | **`draft` \| `active` \| `archived` \| `deprecated`** |
+| 16 | Model compatibility? | **Free tags** (e.g. `gpt-4o`, `claude-4`) |
 
 ## UX
 
-17. **Command palette scope in MVP:** navigation + create + search only, or also settings actions?
-18. **Graph view:** full-library graph, or ego-graph (selected asset + N hops) for performance?
-19. **Editor default:** split preview, tabbed preview, or WYSIWYG-only with source mode toggle?
+| # | Question | Decision |
+|---|----------|----------|
+| 17 | Command palette scope? | **Navigation + create + search only** (no settings actions in MVP) |
+| 18 | Graph view? | **Ego-graph** (selected asset + N hops) |
+| 19 | Editor default? | **Tabbed preview** (Editor \| Preview tabs) |
 
 ## Engineering
 
-20. **Package manager?** Provisional: **pnpm**.
-21. **Node vs Bun for sidecar?** Provisional: **Node LTS** for Prisma stability.
-22. **Monorepo?** Provisional: **single package** for MVP; split `apps/desktop` + `packages/*` when needed.
-23. **License?** MIT / Apache-2.0 / proprietary / unlicensed for now?
+| # | Question | Decision |
+|---|----------|----------|
+| 20 | Package manager? | **pnpm** |
+| 21 | Sidecar runtime? | **Node LTS** |
+| 22 | Monorepo? | **Single package** for MVP |
+| 23 | License? | **MIT** |
 
 ---
 
-Please answer in-line or in a follow-up. Unanswered items keep the provisional defaults above.
+These decisions override any earlier “provisional” defaults in architecture and product docs.

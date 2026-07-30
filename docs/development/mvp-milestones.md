@@ -11,10 +11,10 @@
 
 ### Done when
 
+- [x] Clarifying questions answered ([clarifying-questions.md](../product/clarifying-questions.md))
 - [ ] PRD reviewed
-- [ ] System architecture reviewed (including Tauri + Prisma approach)
-- [ ] Critical clarifying questions answered
-- [ ] Design system palette/fonts confirmed or explicitly accepted as provisional
+- [ ] System architecture reviewed (including Tauri + Prisma / Node LTS approach)
+- [ ] Design system light-first / Graphite Ink accepted
 - [ ] Green light to scaffold code
 
 **No application feature code before this gate.**
@@ -26,29 +26,34 @@
 ### Scope
 
 - Vite + React + TS (strict) + Tailwind + shadcn/ui baseline
+- **pnpm** workspace (single package)
 - ESLint + Prettier + Vitest harness
-- Tauri app window loads React shell
+- Tauri app window loads React shell (**Windows** target)
 - Folder structure per architecture doc
-- Prisma schema committed; migrate on fresh DB
-- `DataClient` + in-memory *or* Prisma repository for health check
-- README updated with dev commands
+- Prisma schema committed; migrate on fresh DB (incl. nested `categories`)
+- `DataClient` + Prisma repository via **Node LTS** sidecar/bridge
+- Light theme default
+- README updated with Windows dev commands
+- `LICENSE` (MIT)
 
 ### Exit criteria
 
-- `pnpm dev` / `pnpm tauri dev` runs
+- `pnpm dev` / `pnpm tauri dev` runs on Windows
 - CI workflow passes lint + typecheck + tests
-- Empty AppShell visible
-
+- Empty AppShell visible (light theme)
 ---
 
 ## Milestone 2 — Asset library & CRUD
 
 ### Scope
 
-- Create / read / update / soft-delete assets (all types via shared form)
+- Create / read / update / soft-delete assets (all types via shared form) — **no hard delete**
+- Nested category taxonomy CRUD + filter
 - Library page with type filter, sort, favorite, archive
-- Basic metadata: category, tags, status, notes, model compatibility
-- Variables CRUD on asset
+- Basic metadata: category, tags, status (`draft|active|archived|deprecated`), notes
+- Model compatibility as free tags
+- Variables CRUD (`{{snake_case}}` keys)
+- Optional: seed path preparation for demo library
 
 ### Exit criteria
 
@@ -61,8 +66,8 @@
 
 ### Scope
 
-- TipTap markdown editor + live preview
-- Variable highlighting `{{var}}`
+- TipTap markdown editor + **tabbed** preview (Editor | Preview)
+- Variable highlighting `{{snake_case}}`
 - Copy body, duplicate, fork
 - Autosave or explicit save with dirty state
 
@@ -80,7 +85,8 @@
 - Dashboard: recent, favorites, pinned, stats
 - Fuse.js index build/upsert
 - Global search UI
-- ⌘K / Ctrl+K palette (navigate + create + search)
+- `Ctrl+K` palette — **navigate + create + search only**
+- First-run **sample library** / demo assets seed on empty DB
 
 ### Exit criteria
 
@@ -108,7 +114,7 @@
 
 - Link/unlink assets with kinds
 - Asset detail “Related” panel
-- Graph page with focus + depth
+- Graph page: **ego-graph** with focus + depth
 
 ### Exit criteria
 
@@ -122,7 +128,8 @@
 ### Scope
 
 - Agent-specific editor sections (purpose, I/O, etc.)
-- Workflow list + canvas (React Flow or chosen lib)
+- Workflow list + canvas (React Flow or chosen lib) — **builder + visualization only**
+- Nested prompt packs (`childPackIds`)
 - Save nodes/edges; workflow templates flag
 
 ### Exit criteria
@@ -137,8 +144,9 @@
 
 - Import MD, JSON, YAML, ZIP
 - Export same
-- Settings: theme, backup, restore
+- Settings: light-first theme toggle, **manual** backup/restore
 - Placeholder settings pages for AI + Sync
+- English-only copy
 
 ### Exit criteria
 
@@ -153,8 +161,8 @@
 
 - Empty states, error toasts, keyboard pass
 - Performance check on ~1k assets fixture
-- Tauri installers for agreed platforms
-- Short USER_GUIDE.md
+- Tauri **Windows** installer only
+- Short USER_GUIDE.md (English)
 
 ### Exit criteria
 

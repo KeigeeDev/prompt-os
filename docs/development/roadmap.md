@@ -8,8 +8,8 @@
 ## Phased overview
 
 ```text
-Phase 0  Foundation & architecture approval     ← YOU ARE HERE (docs)
-Phase 1  App shell + persistence skeleton
+Phase 0  Foundation & architecture (clarifying Qs decided)  ← YOU ARE HERE
+Phase 1  App shell + persistence skeleton (Windows, pnpm, Node LTS)
 Phase 2  Asset CRUD + library + editor
 Phase 3  Search + command palette + dashboard
 Phase 4  Versions + relationships + graph
@@ -27,7 +27,7 @@ Each phase maps to one or more **MVP milestones** with exit criteria. Do not ski
 
 **Deliverables:** PRD, architecture, schema, types, routing, design system, standards, README.
 
-**Exit:** Explicit approval of architecture + answers to critical clarifying questions.
+**Exit:** Explicit Milestone 0 sign-off. Clarifying questions are decided — see [clarifying-questions.md](../product/clarifying-questions.md).
 
 ---
 

@@ -70,27 +70,27 @@ One job: orient and jump. No secondary promo clutter.
 
 ---
 
-## W4 — Prompt / Asset Editor
+## W4 — Prompt / Asset Editor (tabbed preview)
 
 ```text
 ┌─ Editor ─────────────────────────────────────────────────────────────────┐
 │  ← Library   Research synthesis          [★] [⋯ More]  [Copy] [Save]     │
 │  status: active · v1.2.0 · models: gpt-4o, claude                        │
-├──────────────────────────────┬───────────────────────────────────────────┤
-│  Markdown (TipTap)           │  Preview                                  │
-│                              │                                           │
-│  # Role                      │  (rendered markdown)                      │
-│  You are …                   │                                           │
-│  Consider {{audience}}       │                                           │
-│                              │                                           │
-├──────────────────────────────┴───────────────────────────────────────────┤
+│  [ Editor ]  [ Preview ]                                                 │
+├──────────────────────────────────────────────────────────────────────────┤
+│  (active tab content)                                                    │
+│                                                                          │
+│  Markdown (TipTap)  OR  rendered preview                                 │
+│  Consider {{audience}}                                                   │
+│                                                                          │
+├──────────────────────────────────────────────────────────────────────────┤
 │  Variables: audience [____]  tone [____]   + Add variable                │
-│  Tags: research, strategy    Category: Research                          │
+│  Tags: research, strategy    Category: Research / Synthesis (nested)     │
 │  Notes: …                                                                │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
 
-More menu: Duplicate, Fork, Export, History, Delete, Relationships.
+Default: **tabbed** Editor | Preview (not split). More menu: Duplicate, Fork, Export, History, Delete, Relationships.
 
 ---
 
@@ -140,7 +140,7 @@ More menu: Duplicate, Fork, Export, History, Delete, Relationships.
 └──────────────────────────────────────────────────────────────────────────┘
 ```
 
-Prefer ego-graph by default for performance (see clarifying questions).
+Prefer **ego-graph** by default (focus asset + depth). Full-library force layout is out of MVP.
 
 ---
 
@@ -148,15 +148,16 @@ Prefer ego-graph by default for performance (see clarifying questions).
 
 ```text
 ┌─────────────────────────────────────────────┐
-│  ⌘K  Type a command or search…              │
+│  Ctrl+K  Type a command or search…          │
 │  ─────────────────────────────────────────  │
 │  Jump to: Research synthesis                │
 │  Jump to: Code review agent                 │
 │  Action: Create prompt                      │
-│  Action: Open settings                      │
-│  Action: Import…                            │
+│  Action: Create agent                       │
 └─────────────────────────────────────────────┘
 ```
+
+MVP scope: **navigate + create + search only** (no settings actions).
 
 ---
 
@@ -166,9 +167,9 @@ Prefer ego-graph by default for performance (see clarifying questions).
 ┌─ Settings ───────────────────────────────────────────────────────────────┐
 │  General | Shortcuts | Backup | AI (soon) | Sync (soon)                  │
 │                                                                          │
-│  Theme: ( ) Light  (•) Dark  ( ) System                                  │
+│  Theme: (•) Light  ( ) Dark  ( ) System   ← default: Light               │
 │                                                                          │
-│  Database                                                                │
+│  Database (manual backup)                                                │
 │  [Export backup]  [Restore from file…]                                   │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
@@ -190,4 +191,4 @@ Prefer ego-graph by default for performance (see clarifying questions).
 
 ## Mobile / narrow window
 
-Desktop-first. Below ~900px: collapse sidebar to icon rail; editor stacks preview under editor. Not a primary mobile product.
+**Windows desktop-first** (MVP platform). Below ~900px: collapse sidebar to icon rail; editor keeps tabbed preview. Not a primary mobile product. Single primary window only.
